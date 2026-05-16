@@ -15,8 +15,8 @@ jobs:
 
       - name: Copy CAN module
         run: |
-          mkdir -p micropython/ports/esp32/cmodules/micropython-esp32-twai
-          cp -r src_can_v2 micropython/ports/esp32/cmodules/micropython-esp32-twai/
+          mkdir -p cmodules/micropython-esp32-twai
+          cp -r src_can_v2 cmodules/micropython-esp32-twai/
 
       - name: Build firmware
         uses: espressif/esp-idf-ci-action@v1
