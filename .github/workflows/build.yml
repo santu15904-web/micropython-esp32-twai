@@ -27,9 +27,17 @@ jobs:
             cd micropython/ports/esp32 && \
             idf.py -D MICROPY_BOARD=ESP32_GENERIC \
               -D USER_C_MODULES=../../../../cmodules/micropython-esp32-twai/src_can_v2/micropython.cmake \
-              -B build_can build
+              -B build_can build && \
+            esptool.py --chip esp32 merge_bin \
+              -o build_can/firmware_merged.bin \
+              --flash_mode dio \
+              --flash_freq 40m \
+              --flash_size 4MB \
+              0x1000  build_can/bootloader/bootloader.bin \
+              0x8000  build_can/partition_table/partition-table.bin \
+              0x10000 build_can/micropython.bin
 
       - uses: actions/upload-artifact@v4
         with:
           name: ESP32_CAN_firmware
-          path: micropython/ports/esp32/build_can/*.bin
+          path: micropython/ports/esp32/build_can/firmware_merged.bin
