@@ -1,0 +1,31 @@
+name: Build ESP32 CAN Firmware
+on:
+  workflow_dispatch:
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install ESP-IDF
+        uses: espressif/esp-idf-ci-action@v1
+        with:
+          esp_idf_version: v5.2.1
+          target: esp32
+      - name: Clone MicroPython
+        run: git clone --recursive --depth 1 -b v1.25.0 https://github.com/micropython/micropython.git
+      - name: Build mpy-cross
+        run: make -C micropython/mpy-cross
+      - name: Copy CAN module
+        run: |
+          mkdir -p micropython/ports/esp32/cmodules
+          cp -r src_can_v2 micropython/ports/esp32/cmodules/
+      - name: Build firmware
+        run: |
+          cd micropython/ports/esp32
+          idf.py -D MICROPY_BOARD=ESP32_GENERIC \
+            -D USER_C_MODULES=cmodules/src_can_v2/micropython.cmake \
+            -B build_can build
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ESP32_CAN_firmware
+          path: micropython/ports/esp32/build_can/firmware.bin
