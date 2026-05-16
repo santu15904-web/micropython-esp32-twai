@@ -32,4 +32,4 @@ jobs:
       - uses: actions/upload-artifact@v4
         with:
           name: ESP32_CAN_firmware
-          path: micropython/ports/esp32/build_can/firmware.bin
+          path: micropython/ports/esp32/build_can/*.bin
