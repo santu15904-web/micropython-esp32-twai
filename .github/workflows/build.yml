@@ -26,7 +26,7 @@ jobs:
           command: |
             cd micropython/ports/esp32 && \
             idf.py -D MICROPY_BOARD=ESP32_GENERIC \
-              -D USER_C_MODULES=/github/workspace/micropython/ports/esp32/cmodules/micropython-esp32-twai/src_can_v2/micropython.cmake \
+              -D USER_C_MODULES=../../../../cmodules/micropython-esp32-twai/src_can_v2/micropython.cmake \
               -B build_can build
 
       - uses: actions/upload-artifact@v4
